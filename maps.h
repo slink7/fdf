@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:30:28 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/24 18:33:15 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:40:40 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ typedef struct s_map {
 }	t_map;
 
 t_map	*load_map(char *file_path);
+void	free_map(t_map **map);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/24 19:14:02 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/24 21:18:27 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ int	main(int argc, char** argv)
 
 	mlx.mlx = mlx_init();
 	mlx.window = mlx_new_window(mlx.mlx, 128, 128, "Fenetre de zinzin");
-	mlx_clear_window(mlx.mlx, mlx.window);
 	mlx_key_hook(mlx.window, key_hook, &mlx);
 	map = load_map("maps/pyramide.fdf");
 	mlx_loop(mlx.mlx);
+	free_map(&map);
+	mlx_destroy_window(mlx.mlx, mlx.window);
+	mlx_destroy_display(mlx.mlx);
+	free(mlx.mlx);
 }

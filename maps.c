@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/24 19:16:27 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/24 20:44:48 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	get_tiles(int *width, t_tile **out, char *str)
 	k = -1;
 	while (++k < *width)
 		get_tile(*out + k, temp[k]);
+	ft_strarrfree(temp);
 }
 
 t_map	*get_map_from_list(t_list *lst)
@@ -93,11 +94,23 @@ t_map	*load_map(char *file_path)
 	t_map	*map;
 	int		fd;
 	t_list	*lines;
-	char	*temp_line;
 
 	lines = get_list_from_path(file_path);
 	map = get_map_from_list(lines);
-	printf("Loading map \"%s\"\n", file_path);
-	print_map(map);
+	ft_lstclear(&lines, free);
+	// printf("Loading map \"%s\"\n", file_path);
+	// print_map(map);
 	return (map);
+}
+
+void	free_map(t_map **map)
+{
+	int	k;
+
+	k = -1;
+	while (++k < (*map)->height)
+		free((*map)->tiles[k]);
+	free((*map)->tiles);
+	free(*map);
+	*map = 0;
 }
