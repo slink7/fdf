@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/25 16:38:02 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:40:44 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,25 @@
 #include "project.h"
 #include "libft.h"
 
+# define M_PI		3.14159265358979323846
+
+#define LEFT 65361
+#define UP 65362
+#define RIGHT 65363
+#define DOWN 65364
+
 typedef struct s_mlx {
 	void	*mlx;
 	void	*window;
 }	t_mlx;
 
-int	key_hook(int keycode, void *param)
-{
-	if (keycode == 65307)
-		mlx_loop_end(((t_mlx *)param)->mlx);
-	return (1);
-}
+typedef struct {
+	t_mlx		mlx;
+	t_map		*map;
+	t_camera	cam;
+}	t_all;
+
+
 
 /*
 void	CR_draw_line(t_window *w, t_vec2i *p0, t_vec2i *p1, float v)
@@ -134,24 +142,52 @@ void	draw_map(t_mlx *mlx, t_camera *cam, t_map *map)
 	}
 }
 
+int	key_hook(int keycode, void *param)
+{
+	t_all *all;
+
+	all = param;
+	if (keycode == 65307)
+		mlx_loop_end(all->mlx.mlx);
+	else if (keycode == RIGHT)
+		all->cam.yr += M_PI * 0.1f;
+	else if (keycode == LEFT)
+		all->cam.yr -= M_PI * 0.1f;
+	else if (keycode == UP)
+		all->cam.xr += 0.05f;
+	else if (keycode == DOWN)
+		all->cam.xr -= 0.05f;
+	else if (keycode == 'o')
+		all->cam.scale += 1;
+	else if (keycode == 'p')
+		all->cam.scale -= 1;
+	else if (keycode == 'k')
+		all->cam.zoom *= 0.1f;
+	else if (keycode == 'l')
+		all->cam.zoom /= 0.1f; 
+	mlx_clear_window(all->mlx.mlx, all->mlx.window);
+	draw_map(&all->mlx, &all->cam, all->map);
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
-	t_mlx		mlx;
-	t_map		*map;
-	t_camera	cam;
+	t_all all;
 
 	if (argc != 2)
 		return (0);
-	mlx.mlx = mlx_init();
-	mlx.window = mlx_new_window(mlx.mlx, 512, 512, "Fenetre de zinzin");
-	mlx_key_hook(mlx.window, key_hook, &mlx);
-	map = load_map(argv[1]);
-	cam.scale = 8;
-	cam.yr = 45.0f;
-	draw_map(&mlx, &cam, map);
-	mlx_loop(mlx.mlx);
-	free_map(&map);
-	mlx_destroy_window(mlx.mlx, mlx.window);
-	mlx_destroy_display(mlx.mlx);
-	free(mlx.mlx);
+	all.mlx.mlx = mlx_init();
+	all.mlx.window = mlx_new_window(all.mlx.mlx, 512, 512, "Fenetre de zinzin");
+	mlx_key_hook(all.mlx.window, key_hook, &all);
+	all.map = load_map(argv[1]);
+	all.cam.scale = 8;
+	all.cam.yr = 0.0f;
+	all.cam.xr = 0.5f;
+	all.cam.zoom = 1.0f;
+	draw_map(&all.mlx, &all.cam, all.map);
+	mlx_loop(all.mlx.mlx);
+	free_map(&all.map);
+	mlx_destroy_window(all.mlx.mlx, all.mlx.window);
+	mlx_destroy_display(all.mlx.mlx);
+	free(all.mlx.mlx);
 }
