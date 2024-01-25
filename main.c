@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/25 17:40:44 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:05:31 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "project.h"
 #include "libft.h"
 
-# define M_PI		3.14159265358979323846
+#define M_PI		3.14159265358979323846
 
 #define LEFT 65361
 #define UP 65362
@@ -32,32 +32,11 @@ typedef struct s_mlx {
 	void	*window;
 }	t_mlx;
 
-typedef struct {
+typedef struct s_all {
 	t_mlx		mlx;
 	t_map		*map;
 	t_camera	cam;
 }	t_all;
-
-
-
-/*
-void	CR_draw_line(t_window *w, t_vec2i *p0, t_vec2i *p1, float v)
-{
-	int dx = p1->x - p0->x;
-	int dy = p1->y - p0->y;
-	if (abs(dx) > abs(dy)) {
-		float a = (float) dy / (float) dx;
-		float b = - a * (float) p0->x + (float) p0->y;
-		for (int k = min(p0->x, p1->x); k <= max(p0->x, p1->x); k++)
-			CR_draw(w, &(t_vec2i) {k, (int) round(a * (float) k + b)}, v);
-	} else {
-		float a = (float) dx / (float) dy;
-		float b = - a * (float) p0->y + (float) p0->x;
-		for (int k = min(p0->y, p1->y); k <= max(p0->y, p1->y); k++)
-			CR_draw(w, &(t_vec2i) {(int) round(a * (float) k + b), k}, v);
-	}
-}
-*/
 
 void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 {
@@ -65,8 +44,7 @@ void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 	int		dy;
 	float	a;
 	float	b;
-	int 	k;
-	int		l;
+	int		k;
 
 	dx = v1->x - v0->x;
 	dy = v1->y - v0->y;
@@ -77,8 +55,7 @@ void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 		k = ft_min(v0->x, v1->x) - 1;
 		while (++k <= ft_max(v0->x, v1->x))
 		{
-			l = a * (float) k + b;
-			mlx_pixel_put(mlx->mlx, mlx->window, k, l, 0x00FF00);
+			mlx_pixel_put(mlx->mlx, mlx->window, k, a * (float) k + b, 0x00FF00);
 		}
 	}
 	else
@@ -88,8 +65,7 @@ void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 		k = ft_min(v0->y, v1->y) - 1;
 		while (++k <= ft_max(v0->y, v1->y))
 		{
-			l = a * (float) k + b;
-			mlx_pixel_put(mlx->mlx, mlx->window, l, k, 0x00FF00);
+			mlx_pixel_put(mlx->mlx, mlx->window, a * (float) k + b, k, 0x00FF00);
 		}
 	}
 }
@@ -109,11 +85,11 @@ void	offset(t_ivec2 *v, int x, int y)
 
 void	draw_map(t_mlx *mlx, t_camera *cam, t_map *map)
 {
-	int	k;
-	int	l;
-	t_ivec3 v3;
-	t_ivec2 v2;
-	t_ivec2 v21;
+	int		k;
+	int		l;
+	t_ivec3	v3;
+	t_ivec2	v2;
+	t_ivec2	v21;
 
 	l = -1;
 	while (++l < map->height)
@@ -144,7 +120,7 @@ void	draw_map(t_mlx *mlx, t_camera *cam, t_map *map)
 
 int	key_hook(int keycode, void *param)
 {
-	t_all *all;
+	t_all	*all;
 
 	all = param;
 	if (keycode == 65307)
@@ -164,7 +140,7 @@ int	key_hook(int keycode, void *param)
 	else if (keycode == 'k')
 		all->cam.zoom *= 0.1f;
 	else if (keycode == 'l')
-		all->cam.zoom /= 0.1f; 
+		all->cam.zoom /= 0.1f;
 	mlx_clear_window(all->mlx.mlx, all->mlx.window);
 	draw_map(&all->mlx, &all->cam, all->map);
 	return (1);
@@ -172,7 +148,7 @@ int	key_hook(int keycode, void *param)
 
 int	main(int argc, char **argv)
 {
-	t_all all;
+	t_all	all;
 
 	if (argc != 2)
 		return (0);
