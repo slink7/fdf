@@ -1,6 +1,7 @@
 SRC = \
 	main.c\
-	maps.c
+	maps.c\
+	project.c
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
@@ -20,7 +21,7 @@ fclean : clean
 re : fclean all
 
 $(NAME) : $(OBJ)
-	cc -o $(NAME) $(OBJ) -Lmlx -lmlx -lX11 -lXext -Llibft -lft
+	cc -o $(NAME) $(OBJ) -Lmlx -lmlx -lX11 -lXext -Llibft -lft -lm
 
 $(OBJ_DIR) :
 	mkdir $(OBJ_DIR)

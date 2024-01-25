@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/24 20:44:48 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/25 16:44:50 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_map	*get_map_from_list(t_list *lst)
 
 	map = malloc(sizeof(t_map));
 	map->height = ft_lstsize(lst);
-	map->tiles = malloc(map->height * sizeof(t_tile*));
+	map->tiles = malloc(map->height * sizeof(t_tile *));
 	k = -1;
 	while (++k < map->height)
 	{
@@ -72,6 +72,7 @@ t_map	*get_map_from_list(t_list *lst)
 	}
 	return (map);
 }
+
 void	print_map(t_map *map)
 {
 	int	k;
@@ -98,8 +99,6 @@ t_map	*load_map(char *file_path)
 	lines = get_list_from_path(file_path);
 	map = get_map_from_list(lines);
 	ft_lstclear(&lines, free);
-	// printf("Loading map \"%s\"\n", file_path);
-	// print_map(map);
 	return (map);
 }
 
