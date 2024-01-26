@@ -1,7 +1,10 @@
 SRC = \
+	vec.c\
 	main.c\
 	maps.c\
-	project.c
+	image.c\
+	project.c\
+	put_line.c\
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))

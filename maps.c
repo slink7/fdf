@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 15:56:22 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/26 17:14:48 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@
 #include "libft.h"
 #include "maps.h"
 
-t_list	*get_list_from_path(char *file_path)
+#define INT_MAX	0x7FFFFFFF
+#define GREY	0x888888
+
+static t_list	*get_list_from_path(char *file_path)
 {
 	t_list	*lines;
 	char	*temp_line;
@@ -37,39 +40,35 @@ t_list	*get_list_from_path(char *file_path)
 	return (lines);
 }
 
-
-void	get_tile(t_tile *out, char *str)
-{
-	char	*chr;
-
-	out->height = ft_atoi(str);
-	chr = ft_strchr(str, ',');
-	if (!chr)
-		out->color = 0x808080;
-	else
-		out->color = ft_atoi_base(chr + 3, "0123456789ABCDEF");
-}
-
-void	get_tiles(int *width, t_tile **out, char *str)
+static void	get_tiles(int *width, t_tile **out, char *str)
 {
 	char	**temp;
+	char	*chr;
 	int		k;
 
 	temp = ft_split(str, ' ');
-	*width = ft_strarrlen(temp);
+	*width = ft_min(*width, ft_strarrlen(temp));
 	*out = malloc(*width * sizeof(t_tile));
 	k = -1;
 	while (++k < *width)
-		get_tile(*out + k, temp[k]);
+	{
+		(*out + k)->height = ft_atoi(temp[k]);
+		chr = ft_strchr(temp[k], ',');
+		if (!chr)
+			(*out + k)->color = GREY;
+		else
+			(*out + k)->color = ft_atoi_base(chr + 3, "0123456789ABCDEF");
+	}
 	ft_strarrfree(temp);
 }
 
-t_map	*get_map_from_list(t_list *lst)
+static t_map	*get_map_from_list(t_list *lst)
 {
 	t_map	*map;
 	int		k;
 
 	map = malloc(sizeof(t_map));
+	map->width = INT_MAX;
 	map->height = ft_lstsize(lst);
 	map->tiles = malloc(map->height * sizeof(t_tile *));
 	k = -1;
@@ -79,23 +78,6 @@ t_map	*get_map_from_list(t_list *lst)
 		lst = lst->next;
 	}
 	return (map);
-}
-
-void	print_map(t_map *map)
-{
-	int	k;
-	int	l;
-
-	l = -1;
-	while (++l < map->height)
-	{
-		k = -1;
-		while (++k < map->width)
-		{
-			printf("%d ", map->tiles[l][k].height);
-		}
-		printf("\n");
-	}
 }
 
 t_map	*load_map(char *file_path)
