@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/25 17:09:28 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/26 15:56:22 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,17 @@ t_list	*get_list_from_path(char *file_path)
 	return (lines);
 }
 
+
 void	get_tile(t_tile *out, char *str)
 {
+	char	*chr;
+
 	out->height = ft_atoi(str);
+	chr = ft_strchr(str, ',');
+	if (!chr)
+		out->color = 0x808080;
+	else
+		out->color = ft_atoi_base(chr + 3, "0123456789ABCDEF");
 }
 
 void	get_tiles(int *width, t_tile **out, char *str)

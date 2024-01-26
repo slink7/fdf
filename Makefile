@@ -10,7 +10,14 @@ NAME = fdf
 
 CFLAG = -Werror -Wall -Wextra
 
-all : $(OBJ_DIR) $(NAME)
+all : libft/libft.a $(OBJ_DIR) $(NAME)
+
+libft/ :
+	git clone git@github.com:slink7/libft.git
+
+libft/libft.a : libft/
+	git submodule update --remote libft
+	cd libft/ ; make
 
 clean :
 	rm -rf $(OBJ_DIR) || true

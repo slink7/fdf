@@ -6,9 +6,11 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/25 18:05:31 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/26 15:56:20 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+//62863595 72829435
 
 #include <stdlib.h>
 #include <math.h>
@@ -20,7 +22,7 @@
 #include "project.h"
 #include "libft.h"
 
-#define M_PI		3.14159265358979323846
+#define M_PI	3.14159265358979323846
 
 #define LEFT 65361
 #define UP 65362
@@ -38,7 +40,7 @@ typedef struct s_all {
 	t_camera	cam;
 }	t_all;
 
-void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
+void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1, int color)
 {
 	int		dx;
 	int		dy;
@@ -55,7 +57,7 @@ void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 		k = ft_min(v0->x, v1->x) - 1;
 		while (++k <= ft_max(v0->x, v1->x))
 		{
-			mlx_pixel_put(mlx->mlx, mlx->window, k, a * (float) k + b, 0x00FF00);
+			mlx_pixel_put(mlx->mlx, mlx->window, k, a * (float) k + b, color);
 		}
 	}
 	else
@@ -65,7 +67,7 @@ void	draw_line(t_mlx *mlx, t_ivec2 *v0, t_ivec2 *v1)
 		k = ft_min(v0->y, v1->y) - 1;
 		while (++k <= ft_max(v0->y, v1->y))
 		{
-			mlx_pixel_put(mlx->mlx, mlx->window, a * (float) k + b, k, 0x00FF00);
+			mlx_pixel_put(mlx->mlx, mlx->window, a * (float) k + b, k, color);
 		}
 	}
 }
@@ -97,22 +99,22 @@ void	draw_map(t_mlx *mlx, t_camera *cam, t_map *map)
 		k = -1;
 		while (++k < map->width)
 		{
-			set_vec(&v3, k - map->height / 2, map->tiles[l][k].height, l - map->width / 2);
+			set_vec(&v3, k - map->width / 2, map->tiles[l][k].height, l - map->height / 2);
 			project(cam, &v3, &v2);
 			offset(&v2, 256, 256);
 			if (k < map->width - 1)
 			{
-				set_vec(&v3, k - map->height / 2 + 1, map->tiles[l][k + 1].height, l - map->width / 2);
+				set_vec(&v3, k - map->width / 2 + 1, map->tiles[l][k + 1].height, l - map->height / 2);
 				project(cam, &v3, &v21);
 				offset(&v21, 256, 256);
-				draw_line(mlx, &v2, &v21);
+				draw_line(mlx, &v2, &v21, map->tiles[l][k].color);
 			}
 			if (l < map->height - 1)
 			{
-				set_vec(&v3, k - map->height / 2, map->tiles[l + 1][k].height, l - map->width / 2 + 1);
+				set_vec(&v3, k - map->width / 2, map->tiles[l + 1][k].height, l - map->height / 2 + 1);
 				project(cam, &v3, &v21);
 				offset(&v21, 256, 256);
-				draw_line(mlx, &v2, &v21);
+				draw_line(mlx, &v2, &v21, map->tiles[l][k].color);
 			}
 		}
 	}
@@ -130,17 +132,17 @@ int	key_hook(int keycode, void *param)
 	else if (keycode == LEFT)
 		all->cam.yr -= M_PI * 0.1f;
 	else if (keycode == UP)
-		all->cam.xr += 0.05f;
+		all->cam.xr = ft_fclamp(0.0f, all->cam.xr + 0.05f, 1.0f);
 	else if (keycode == DOWN)
-		all->cam.xr -= 0.05f;
+		all->cam.xr = ft_fclamp(0.0f, all->cam.xr - 0.05f, 1.0f);
 	else if (keycode == 'o')
-		all->cam.scale += 1;
+		all->cam.scale = ft_clamp(0, all->cam.scale + 1, 16);
 	else if (keycode == 'p')
-		all->cam.scale -= 1;
+		all->cam.scale = ft_clamp(0, all->cam.scale - 1, 16);
 	else if (keycode == 'k')
-		all->cam.zoom *= 0.1f;
+		all->cam.zoom = ft_fclamp(0.0, all->cam.zoom * 1.01, 1.0f);
 	else if (keycode == 'l')
-		all->cam.zoom /= 0.1f;
+		all->cam.zoom = ft_fclamp(0.0, all->cam.zoom / 1.01, 1.0f);
 	mlx_clear_window(all->mlx.mlx, all->mlx.window);
 	draw_map(&all->mlx, &all->cam, all->map);
 	return (1);
