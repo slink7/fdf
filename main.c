@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 19:43:49 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/27 00:55:52 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include <math.h>
 
 #include <stdio.h>
+
+#include <X11/keysym.h>
+#include <X11/X.h>
 
 #include "mlx.h"
 #include "maps.h"
@@ -112,6 +115,8 @@ int	key_hook(int keycode, void *param)
 	return (1);
 }
 
+
+
 void	init(t_all *all)
 {
 	all->mlx.mlx = mlx_init();
@@ -121,9 +126,16 @@ void	init(t_all *all)
 
 void	deinit(t_all *all)
 {
+	free(all->cam);
 	mlx_destroy_window(all->mlx.mlx, all->mlx.window);
 	mlx_destroy_display(all->mlx.mlx);
 	free(all->mlx.mlx);
+}
+
+int	close_(t_all *all)
+{
+	mlx_loop_end(all->mlx.mlx);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -132,14 +144,23 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		ft_putstr_fd("Wrong number of args : ./fdf <map.fdf>\n", 2);
+		ft_printf_fd(2, "Wrong number of args : ./fdf <map.fdf>\n");
 		return (1);
 	}
 	init(&all);
-	mlx_key_hook(all.mlx.window, key_hook, &all);
+	mlx_hook(all.mlx.window, DestroyNotify, ButtonPressMask, close_, &all);
+	mlx_hook(all.mlx.window, KeyPress, KeyPressMask, key_hook, &all);
 	all.map = load_map(argv[1]);
 	draw_map(&all.mlx, all.cam, all.map);
 	mlx_loop(all.mlx.mlx);
 	free_map(&all.map);
+	
 	deinit(&all);
 }
+
+///
+/// Fluidifier les inputs
+/// Ajouter le deplacement camera
+/// Rendre l'affichage responsive
+/// Fragmenter le code
+///

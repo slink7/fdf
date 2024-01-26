@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 17:14:48 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/26 21:24:10 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	get_tiles(int *width, t_tile **out, char *str)
 		if (!chr)
 			(*out + k)->color = GREY;
 		else
-			(*out + k)->color = ft_atoi_base(chr + 3, "0123456789ABCDEF");
+			(*out + k)->color = ft_atoi_base(chr + 3, "0123456789abcdef");
 	}
 	ft_strarrfree(temp);
 }
