@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 21:24:10 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/27 22:28:11 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 #define INT_MAX	0x7FFFFFFF
 #define GREY	0x888888
+#define WHITE	0xFFFFFF
 
 static t_list	*get_list_from_path(char *file_path)
 {
@@ -55,9 +56,9 @@ static void	get_tiles(int *width, t_tile **out, char *str)
 		(*out + k)->height = ft_atoi(temp[k]);
 		chr = ft_strchr(temp[k], ',');
 		if (!chr)
-			(*out + k)->color = GREY;
+			(*out + k)->color = WHITE;
 		else
-			(*out + k)->color = ft_atoi_base(chr + 3, "0123456789abcdef");
+			(*out + k)->color = ft_atoi_base(chr + 3, "0123456789ABCDEF");
 	}
 	ft_strarrfree(temp);
 }

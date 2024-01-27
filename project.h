@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:10:02 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 19:37:04 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/27 18:54:34 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_camera
 	float	xr;
 	float	zoom;
 	int		scale;
+	t_ivec2	pos;
 }	t_camera;
 
 t_camera	*new_cam(int scale, float yr, float xr, float zoom);

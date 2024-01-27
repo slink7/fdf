@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:00:08 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/27 00:55:52 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/27 22:14:37 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@
 typedef struct s_mlx {
 	void	*mlx;
 	void	*window;
+	int		screen_width;
+	int		screen_height;
 }	t_mlx;
 
 typedef struct s_all {
@@ -66,19 +68,22 @@ void	draw_map(t_mlx *mlx, t_camera *cam, t_map *map)
 		{
 			set_vec(&v3, k - map->width / 2, map->tiles[l][k].height, l - map->height / 2);
 			project(cam, &v3, &v2);
-			offset(&v2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+			offset(&v2, mlx->screen_width / 2, mlx->screen_height / 2);
+			offset(&v2, cam->pos.x, cam->pos.y);
 			if (k < map->width - 1)
 			{
 				set_vec(&v3, k - map->width / 2 + 1, map->tiles[l][k + 1].height, l - map->height / 2);
 				project(cam, &v3, &v21);
-				offset(&v21, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+				offset(&v21, mlx->screen_width / 2, mlx->screen_height / 2);
+				offset(&v21, cam->pos.x, cam->pos.y);
 				put_line(bb, &v2, &v21, map->tiles[l][k].color);
 			}
 			if (l < map->height - 1)
 			{
 				set_vec(&v3, k - map->width / 2, map->tiles[l + 1][k].height, l - map->height / 2 + 1);
 				project(cam, &v3, &v21);
-				offset(&v21, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+				offset(&v21, mlx->screen_width / 2, mlx->screen_height / 2);
+				offset(&v21, cam->pos.x, cam->pos.y);
 				put_line(bb, &v2, &v21, map->tiles[l][k].color);
 			}
 		}
@@ -95,13 +100,13 @@ int	key_hook(int keycode, void *param)
 	if (keycode == 65307)
 		mlx_loop_end(all->mlx.mlx);
 	else if (keycode == RIGHT)
-		all->cam->yr += M_PI * 0.1f;
+		all->cam->yr += M_PI / 16.0f;
 	else if (keycode == LEFT)
-		all->cam->yr -= M_PI * 0.1f;
+		all->cam->yr -= M_PI / 16.0f;
 	else if (keycode == UP)
-		all->cam->xr = ft_fclamp(0.0f, all->cam->xr + 0.05f, 1.0f);
+		all->cam->xr = ft_fclamp(-M_PI / 4.0f, all->cam->xr + 0.05f, M_PI / 4.0f);
 	else if (keycode == DOWN)
-		all->cam->xr = ft_fclamp(0.0f, all->cam->xr - 0.05f, 1.0f);
+		all->cam->xr = ft_fclamp(-M_PI / 4.0f, all->cam->xr - 0.05f, M_PI / 4.0f);
 	else if (keycode == 'o')
 		all->cam->scale = ft_clamp(1, all->cam->scale + 1, 32);
 	else if (keycode == 'p')
@@ -110,6 +115,14 @@ int	key_hook(int keycode, void *param)
 		all->cam->zoom = ft_fclamp(0.5, all->cam->zoom * 1.1, 2.0f);
 	else if (keycode == 'l')
 		all->cam->zoom = ft_fclamp(0.5, all->cam->zoom / 1.1, 2.0f);
+	else if (keycode == 'z')
+		all->cam->pos.y += all->cam->scale;
+	else if (keycode == 's')
+		all->cam->pos.y -= all->cam->scale;
+	else if (keycode == 'q')
+		all->cam->pos.x += all->cam->scale;
+	else if (keycode == 'd')
+		all->cam->pos.x -= all->cam->scale;
 	mlx_clear_window(all->mlx.mlx, all->mlx.window);
 	draw_map(&all->mlx, all->cam, all->map);
 	return (1);
@@ -119,9 +132,11 @@ int	key_hook(int keycode, void *param)
 
 void	init(t_all *all)
 {
+	all->mlx.screen_width = 1024;
+	all->mlx.screen_height = 512;
 	all->mlx.mlx = mlx_init();
-	all->mlx.window = mlx_new_window(all->mlx.mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Fenetre de zinzin");
-	all->cam = new_cam(8, 0.0f, 0.5f, 1.0f);
+	all->mlx.window = mlx_new_window(all->mlx.mlx, all->mlx.screen_width, all->mlx.screen_height, "Fenetre de zinzin");
+	all->cam = new_cam(8, 0.0f, 0.0f, 1.0f);
 }
 
 void	deinit(t_all *all)
@@ -138,6 +153,13 @@ int	close_(t_all *all)
 	return (0);
 }
 
+int	hook_expose_(t_all *all)
+{
+	//mlx_get_screen_size(all->mlx.mlx, &all->mlx.screen_width, &all->mlx.screen_height);
+	//printf("Now %d %d\n", all->mlx.screen_width, all->mlx.screen_height);
+	draw_map(&all->mlx, all->cam, all->map);
+}
+
 int	main(int argc, char **argv)
 {
 	t_all	all;
@@ -150,6 +172,7 @@ int	main(int argc, char **argv)
 	init(&all);
 	mlx_hook(all.mlx.window, DestroyNotify, ButtonPressMask, close_, &all);
 	mlx_hook(all.mlx.window, KeyPress, KeyPressMask, key_hook, &all);
+	mlx_hook(all.mlx.window, Expose, ExposureMask, hook_expose_, &all);
 	all.map = load_map(argv[1]);
 	draw_map(&all.mlx, all.cam, all.map);
 	mlx_loop(all.mlx.mlx);
@@ -160,7 +183,6 @@ int	main(int argc, char **argv)
 
 ///
 /// Fluidifier les inputs
-/// Ajouter le deplacement camera
 /// Rendre l'affichage responsive
 /// Fragmenter le code
 ///

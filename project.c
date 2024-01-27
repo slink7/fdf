@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:10:39 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/26 19:40:39 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/27 23:36:37 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,52 @@ t_camera	*new_cam(int scale, float yr, float xr, float zoom)
 	cam->yr = yr;
 	cam->xr = xr;
 	cam->zoom = zoom;
+	cam->pos.x = 0;
+	cam->pos.y = 0;
 	return (cam);
+}
+
+void	rot_y(t_fvec3 *out, t_fvec3 *in, float theta)
+{
+	float cos;
+	float sin;
+
+	cos = cosf(theta);
+	sin = sinf(theta);
+	out->x = in->x * cos - in->z * sin;
+	out->y = in->y;
+	out->z = in->x * sin + in->z * cos;
+}
+
+void	rot_x(t_fvec3 *out, t_fvec3 *in, float theta)
+{
+	float cos;
+	float sin;
+
+	cos = cosf(theta);
+	sin = sinf(theta);
+	out->x = in->x;
+	out->y = in->y * cos - in->z * sin;
+	out->z = in->y * sin + in->z * cos;
 }
 
 void	project(t_camera *cam, t_ivec3 *in, t_ivec2 *out)
 {
-	out->x = cam->zoom * (in->x * cam->scale * cosf(cam->yr) + in->z * cam->scale * sinf(cam->yr));
-	out->y = cam->zoom * (cam->xr * (-in->x * cam->scale * sinf(cam->yr) + in->z * cam->scale * cosf(cam->yr)) - (1.0f - cam->xr) * (in->y * cam->scale));
+	t_fvec3 roty;
+	t_fvec3 rotx;
+	t_fvec3 e;
+
+	e.x = in->x;
+	e.y = in->y;
+	e.z = in->z;
+
+	rot_x(&rotx, &e, cam->xr);
+	rot_y(&roty, &rotx, cam->yr);
+	
+	// out->x = cam->scale * (roty.x - roty.z);
+	// out->y = cam->scale * (-roty.y + roty.z);
+	
+	out->x = cam->zoom * (roty.x * cam->scale + roty.z * cam->scale );
+	out->y = cam->zoom * ((-roty.x * cam->scale + roty.z * cam->scale) - (roty.y * cam->scale));
+	
 }
