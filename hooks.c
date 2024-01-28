@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 16:12:15 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/28 17:29:33 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:03:59 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	key_hook(int keycode, t_all *all)
 	key_hook_clamped(keycode, all);
 	key_hook_unclamped(keycode, all);
 	draw_map(all);
+	return (0);
 }
 
 int	close_hook(t_all *all)
@@ -73,4 +74,5 @@ int	close_hook(t_all *all)
 int	expose_hook(t_all *all)
 {
 	draw_map(all);
+	return (0);
 }

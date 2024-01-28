@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/28 17:57:28 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:04:10 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ static t_map	*get_map_from_list(t_list *lst)
 t_map	*load_map(char *file_path)
 {
 	t_map	*map;
-	int		fd;
 	t_list	*lines;
 
 	lines = get_list_from_path(file_path);
