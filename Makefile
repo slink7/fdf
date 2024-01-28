@@ -13,7 +13,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
 NAME = fdf
 
-CFLAG = -Werror -Wall -Wextra
+CFLAGS = -Werror -Wall -Wextra
 
 all : libft/libft.a $(OBJ_DIR) $(NAME)
 
