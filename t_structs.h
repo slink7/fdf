@@ -1,35 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   maps.h                                             :+:      :+:    :+:   */
+/*   t_structs.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 21:30:28 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/28 17:56:03 by scambier         ###   ########.fr       */
+/*   Created: 2024/01/28 16:15:29 by scambier          #+#    #+#             */
+/*   Updated: 2024/01/28 16:52:26 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAPS_H
-# define MAPS_H
+#ifndef T_STRUCTS_H
+# define T_STRUCTS_H
 
 # include "project.h"
+# include "maps.h"
 
-typedef struct s_tile {
-	int	height;
-	int	color;
-}	t_tile;
+typedef struct s_mlx {
+	void	*mlx;
+	void	*window;
+	int		screen_width;
+	int		screen_height;
+}	t_mlx;
 
-typedef struct s_map {
-	int		width;
-	int		height;
-	t_tile	**tiles;
-}	t_map;
-
-typedef struct s_all	t_all;
-
-t_map	*load_map(char *file_path);
-void	free_map(t_map **map);
-void	draw_map(t_all *all);
+typedef struct s_all {
+	t_mlx		mlx;
+	t_map		*map;
+	t_camera	*cam;
+}	t_all;
 
 #endif

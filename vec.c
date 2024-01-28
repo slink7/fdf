@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:16:16 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/27 21:08:37 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:53:03 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_fvec3	*new_fvec3(float x, float y, float z)
 	return (out);
 }
 
-void	set_vec(t_ivec3 *v, int x, int y, int z)
+void	sv(t_ivec3 *v, int x, int y, int z)
 {
 	v->x = x;
 	v->y = y;

@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 17:35:59 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/27 19:28:46 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:12:10 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "image.h"
 #include "libft.h"
 
-static void	put_line_vertical(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
+static void	put_line_v(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 {
 	float	a;
 	float	b;
@@ -27,7 +27,7 @@ static void	put_line_vertical(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 		img_put_pixel(img, a * (float)k + b, k, color);
 }
 
-static void	put_line_horizontal(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
+static void	put_line_h(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 {
 	float	a;
 	float	b;
@@ -45,7 +45,7 @@ static void	put_line_horizontal(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int colo
 void	put_line(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 {
 	if (ft_abs(v1->x - v0->x) > ft_abs(v1->y - v0->y))
-		put_line_horizontal(img, v0, v1, color);
+		put_line_h(img, v0, v1, color);
 	else
-		put_line_vertical(img, v0, v1, color);
+		put_line_v(img, v0, v1, color);
 }

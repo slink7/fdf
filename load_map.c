@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   maps.c                                             :+:      :+:    :+:   */
+/*   load_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:12:06 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/27 22:28:11 by scambier         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:57:28 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static t_list	*get_list_from_path(char *file_path)
 
 	lines = 0;
 	fd = open(file_path, O_RDONLY);
+	if (fd < 1)
+		return (0);
 	temp_line = get_next_line(fd);
 	while (temp_line)
 	{
@@ -88,6 +90,8 @@ t_map	*load_map(char *file_path)
 	t_list	*lines;
 
 	lines = get_list_from_path(file_path);
+	if (!lines)
+		return (0);
 	map = get_map_from_list(lines);
 	ft_lstclear(&lines, free);
 	return (map);
