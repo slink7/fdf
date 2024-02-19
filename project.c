@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:10:39 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/29 17:27:01 by scambier         ###   ########.fr       */
+/*   Updated: 2024/02/19 11:52:51 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	project(t_camera *cam, t_ivec3 *in, t_ivec2 *out)
 	else
 	{
 		out->x = cam->zoom * (roty.x * cam->scale + roty.z * cam->scale);
-		out->y = cam->zoom * ((-roty.x * cam->scale + roty.z * cam->scale) - (roty.y * cam->scale));
+		out->y = cam->zoom * ((-roty.x * cam->scale + roty.z * cam->scale)
+				- (roty.y * cam->scale));
 	}
 }
