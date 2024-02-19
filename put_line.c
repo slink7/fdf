@@ -6,7 +6,7 @@
 /*   By: scambier <scambier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 17:35:59 by scambier          #+#    #+#             */
-/*   Updated: 2024/01/28 17:12:10 by scambier         ###   ########.fr       */
+/*   Updated: 2024/02/19 11:50:02 by scambier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,18 @@ static void	put_line_v(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 	float	a;
 	float	b;
 	int		k;
+	int		l;
 
 	a = (float)(v1->x - v0->x) / (float)(v1->y - v0->y);
 	b = -a * (float)v0->y + (float)v0->x;
 	k = ft_min(v0->y, v1->y) - 1;
 	while (++k <= ft_max(v0->y, v1->y))
-		img_put_pixel(img, a * (float)k + b, k, color);
+	{
+		l = a * (float)k + b;
+		if (l < 0 || k < 0 || l > img->width || k > img->height)
+			return ;
+		img_put_pixel(img, l, k, color);
+	}
 }
 
 static void	put_line_h(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
@@ -32,13 +38,17 @@ static void	put_line_h(t_image *img, t_ivec2 *v0, t_ivec2 *v1, int color)
 	float	a;
 	float	b;
 	int		k;
+	int		l;
 
 	a = (float)(v1->y - v0->y) / (float)(v1->x - v0->x);
 	b = -a * (float)v0->x + (float) v0->y;
 	k = ft_min(v0->x, v1->x) - 1;
 	while (++k <= ft_max(v0->x, v1->x))
 	{
-		img_put_pixel(img, k, a * (float)k + b, color);
+		l = a * (float)k + b;
+		if (k < 0 || l < 0 || k > img->width || l > img->height)
+			return ;
+		img_put_pixel(img, k, l, color);
 	}
 }
 
